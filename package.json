@@ -51,7 +51,10 @@
     "webpack-dev-server": "^3.11.0"
   },
   "license": "MIT",
-  "repository": "git://github.com/Vanessa219/vditor.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WizTeam/vditor.git"
+  },
   "bugs": {
     "url": "https://github.com/Vanessa219/vditor/issues"
   },
