@@ -113,6 +113,7 @@ class Vditor extends VditorMethod {
                 footnotes: this.vditor.options.preview.markdown.footnotes,
                 headingAnchor: false,
                 inlineMathDigit: this.vditor.options.preview.math.inlineDigit,
+                linkBase: this.vditor.options.preview.markdown.linkBase,
                 listMarker: this.vditor.options.preview.markdown.listMarker,
                 paragraphBeginningSpace: this.vditor.options.preview.markdown.paragraphBeginningSpace,
                 sanitize: this.vditor.options.preview.markdown.sanitize,
@@ -144,7 +145,7 @@ class Vditor extends VditorMethod {
         }
     }
 
-    /** 获取编辑器内容 */
+    /** 获取 Markdown 内容 */
     public getValue() {
         return getMarkdown(this.vditor);
     }
@@ -192,7 +193,7 @@ class Vditor extends VditorMethod {
         this.vditor[this.vditor.currentMode].element.setAttribute("contenteditable", "true");
     }
 
-    /** 选中从 start 开始到 end 结束的字符串，不支持 wysiwyg 模式 */
+    /** 选中从 start 开始到 end 结束的字符串，不支持 wysiwyg & ir 模式 */
     public setSelection(start: number, end: number) {
         if (this.vditor.currentMode !== "sv") {
             console.error("所见即所得模式暂不支持该方法");
@@ -219,13 +220,7 @@ class Vditor extends VditorMethod {
 
     /** 获取焦点位置 */
     public getCursorPosition() {
-        if (this.vditor.currentMode === "wysiwyg") {
-            return getCursorPosition(this.vditor.wysiwyg.element);
-        } else if (this.vditor.currentMode === "sv") {
-            return getCursorPosition(this.vditor.sv.element);
-        } else if (this.vditor.currentMode === "ir") {
-            return getCursorPosition(this.vditor.ir.element);
-        }
+        return getCursorPosition(this.vditor[this.vditor.currentMode].element);
     }
 
     /** 上传是否还在进行中 */
@@ -257,7 +252,7 @@ class Vditor extends VditorMethod {
         return html2md(this.vditor, value);
     }
 
-    /** 获取预览区内容 */
+    /** 获取 HTML */
     public getHTML() {
         return getHTML(this.vditor);
     }

@@ -1,6 +1,6 @@
 import {Constants} from "../constants";
 import {isChrome} from "./compatibility";
-import {hasClosestBlock} from "./hasClosest";
+import {hasClosestBlock, hasClosestByClassName} from "./hasClosest";
 
 export const getEditorRange = (element: HTMLElement) => {
     let range: Range;
@@ -18,8 +18,14 @@ export const getEditorRange = (element: HTMLElement) => {
 };
 
 export const getCursorPosition = (editor: HTMLElement) => {
-    const parentRect = editor.parentElement.getBoundingClientRect();
     const range = window.getSelection().getRangeAt(0);
+    if (!editor.contains(range.startContainer) && !hasClosestByClassName(range.startContainer, "vditor-panel--none")) {
+        return {
+            left: 0,
+            top: 0,
+        };
+    }
+    const parentRect = editor.parentElement.getBoundingClientRect();
     let cursorRect;
     if (range.getClientRects().length === 0) {
         if (range.startContainer.nodeType === 3) {

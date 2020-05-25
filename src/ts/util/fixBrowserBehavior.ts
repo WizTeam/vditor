@@ -18,7 +18,13 @@ import {
 import {getLastNode} from "./hasClosest";
 import {hasClosestByHeadings} from "./hasClosestByHeadings";
 import {matchHotKey} from "./hotKey";
-import {getEditorRange, getSelectPosition, insertHTML, setRangeByWbr, setSelectionByPosition} from "./selection";
+import {
+    getEditorRange,
+    getSelectPosition,
+    insertHTML,
+    setRangeByWbr,
+    setSelectionByPosition, setSelectionFocus,
+} from "./selection";
 
 // https://github.com/Vanessa219/vditor/issues/361
 export const fixCJKPosition = (range: Range, event: KeyboardEvent) => {
@@ -99,6 +105,7 @@ const goPreviousCell = (cellElement: HTMLElement, range: Range, isSelected = tru
         if (!isSelected) {
             range.collapse(false);
         }
+        setSelectionFocus(range);
     }
     return previousElement;
 };
@@ -117,6 +124,7 @@ export const insertAfterBlock = (vditor: IVditor, event: KeyboardEvent, range: R
         } else {
             range.selectNodeContents(nextElement);
             range.collapse(true);
+            setSelectionFocus(range);
         }
         event.preventDefault();
         return true;
@@ -139,6 +147,7 @@ export const insertBeforeBlock = (vditor: IVditor, event: KeyboardEvent, range: 
         } else {
             range.selectNodeContents(previousElement);
             range.collapse(false);
+            setSelectionFocus(range);
         }
         event.preventDefault();
         return true;
@@ -529,7 +538,7 @@ export const fixMarkdown = (event: KeyboardEvent, vditor: IVditor, pElement: HTM
             }
 
             pElement.insertAdjacentHTML("afterend",
-                `${pInnerHTML}<hr data-block="0"><p data-block="0">\n<wbr></p>`);
+                `${pInnerHTML}<hr data-block="0"><p data-block="0"><wbr>\n</p>`);
             pElement.remove();
             setRangeByWbr(vditor[vditor.currentMode].element, range);
             execAfterRender(vditor);
@@ -540,7 +549,7 @@ export const fixMarkdown = (event: KeyboardEvent, vditor: IVditor, pElement: HTM
 
         if (isHeadingMD(pElement.innerHTML)) {
             // heading 渲染
-            pElement.outerHTML = vditor.lute.SpinVditorDOM(pElement.innerHTML + '<p data-block="0">\n<wbr></p>');
+            pElement.outerHTML = vditor.lute.SpinVditorDOM(pElement.innerHTML + '<p data-block="0"><wbr>\n</p>');
             setRangeByWbr(vditor[vditor.currentMode].element, range);
             execAfterRender(vditor);
             scrollCenter(vditor);
@@ -609,6 +618,7 @@ export const fixTable = (vditor: IVditor, event: KeyboardEvent, range: Range) =>
             }
             if (nextElement) {
                 range.selectNodeContents(nextElement);
+                setSelectionFocus(range);
             }
             event.preventDefault();
             return true;
@@ -621,6 +631,7 @@ export const fixTable = (vditor: IVditor, event: KeyboardEvent, range: Range) =>
                 if (tableElement.previousElementSibling) {
                     range.selectNodeContents(tableElement.previousElementSibling);
                     range.collapse(false);
+                    setSelectionFocus(range);
                 } else {
                     insertEmptyBlock(vditor, "beforebegin");
                 }
@@ -641,6 +652,7 @@ export const fixTable = (vditor: IVditor, event: KeyboardEvent, range: Range) =>
             }
             range.selectNodeContents(previousElement.cells[m]);
             range.collapse(false);
+            setSelectionFocus(range);
             return true;
         }
 
@@ -651,6 +663,7 @@ export const fixTable = (vditor: IVditor, event: KeyboardEvent, range: Range) =>
                 if (tableElement.nextElementSibling) {
                     range.selectNodeContents(tableElement.nextElementSibling);
                     range.collapse(true);
+                    setSelectionFocus(range);
                 } else {
                     insertEmptyBlock(vditor, "afterend");
                 }
@@ -670,6 +683,7 @@ export const fixTable = (vditor: IVditor, event: KeyboardEvent, range: Range) =>
             }
             range.selectNodeContents(nextElement.cells[m]);
             range.collapse(true);
+            setSelectionFocus(range);
             return true;
         }
 
@@ -878,6 +892,7 @@ export const fixCodeBlock = (vditor: IVditor, event: KeyboardEvent, codeRenderEl
         }
         range.insertNode(document.createTextNode("\n"));
         range.collapse(false);
+        setSelectionFocus(range);
         execAfterRender(vditor);
         scrollCenter(vditor);
         event.preventDefault();
@@ -1016,11 +1031,13 @@ export const fixTask = (vditor: IVditor, range: Range, event: KeyboardEvent) => 
                             startAttribute = taskItemElement.parentElement.tagName === "UL" ? "" : ` start="1"`;
                             beforeHTML = `<${parentTagName} data-tight="true"${dataMarker} data-block="0">${beforeHTML}</${parentTagName}>`;
                         }
-                        taskItemElement.parentElement.outerHTML = `${beforeHTML}<p data-block="0">\n<wbr></p><${parentTagName}
+                        // <p data-block="0">\n<wbr></p> => <p data-block="0"><wbr>\n</p>
+                        // https://github.com/Vanessa219/vditor/issues/430
+                        taskItemElement.parentElement.outerHTML = `${beforeHTML}<p data-block="0"><wbr>\n</p><${parentTagName}
  data-tight="true"${dataMarker} data-block="0"${startAttribute}>${afterHTML}</${parentTagName}>`;
                     } else {
                         // 任务列表下方无任务列表元素
-                        taskItemElement.parentElement.insertAdjacentHTML("afterend", `<p data-block="0">\n<wbr></p>`);
+                        taskItemElement.parentElement.insertAdjacentHTML("afterend", `<p data-block="0"><wbr>\n</p>`);
                         if (taskItemElement.parentElement.querySelectorAll("li").length === 1) {
                             // 任务列表仅有一项时，使用 p 元素替换
                             taskItemElement.parentElement.remove();
@@ -1090,6 +1107,27 @@ export const fixHR = (range: Range) => {
         (range.startContainer as HTMLElement).tagName === "HR") {
         range.setStartBefore(range.startContainer);
     }
+};
+
+// firefox https://github.com/Vanessa219/vditor/issues/407
+export const fixFirefoxArrowUpTable = (event: KeyboardEvent, blockElement: false | HTMLElement, range: Range) => {
+    if (!isFirefox()) {
+        return false;
+    }
+    if (event.key === "ArrowUp" && blockElement && blockElement.previousElementSibling?.tagName === "TABLE") {
+        const tableElement = blockElement.previousElementSibling as HTMLTableElement;
+        range.selectNodeContents(tableElement.rows[tableElement.rows.length - 1].lastElementChild);
+        range.collapse(false);
+        event.preventDefault();
+        return true;
+    }
+    if (event.key === "ArrowDown" && blockElement && blockElement.nextElementSibling?.tagName === "TABLE") {
+        range.selectNodeContents((blockElement.nextElementSibling as HTMLTableElement).rows[0].cells[0]);
+        range.collapse(true);
+        event.preventDefault();
+        return true;
+    }
+    return false;
 };
 
 export const paste = (vditor: IVditor, event: ClipboardEvent & { target: HTMLElement }, callback: {

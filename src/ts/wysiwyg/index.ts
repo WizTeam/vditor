@@ -250,18 +250,19 @@ class WYSIWYG {
             }
 
             const range = getEditorRange(this.element);
-            const lastRect = this.element.lastElementChild.getBoundingClientRect();
-            if (event.target.isEqualNode(this.element) && this.element.lastElementChild && range.collapsed &&
-                event.y > lastRect.top + lastRect.height) {
-                if (this.element.lastElementChild.tagName === "P") {
-                    range.selectNodeContents(this.element.lastElementChild);
-                    range.collapse(false);
-                } else {
-                    this.element.insertAdjacentHTML("beforeend",
-                        `<p data-block="0">${Constants.ZWSP}<wbr></p>`);
-                    setRangeByWbr(this.element, range);
+            if (event.target.isEqualNode(this.element) && this.element.lastElementChild && range.collapsed) {
+                const lastRect = this.element.lastElementChild.getBoundingClientRect();
+                if (event.y > lastRect.top + lastRect.height) {
+                    if (this.element.lastElementChild.tagName === "P") {
+                        range.selectNodeContents(this.element.lastElementChild);
+                        range.collapse(false);
+                    } else {
+                        this.element.insertAdjacentHTML("beforeend",
+                            `<p data-block="0">${Constants.ZWSP}<wbr></p>`);
+                        setRangeByWbr(this.element, range);
+                    }
+                    return;
                 }
-                return;
             }
 
             highlightToolbar(vditor);
@@ -293,9 +294,7 @@ class WYSIWYG {
                 // 为空时显示 placeholder
                 vditor.wysiwyg.element.innerHTML = "";
             }
-
             const range = getEditorRange(this.element);
-
             if (event.key === "Backspace") {
                 // firefox headings https://github.com/Vanessa219/vditor/issues/211
                 if (isFirefox() && range.startContainer.textContent === "\n" && range.startOffset === 1) {

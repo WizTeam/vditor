@@ -1,6 +1,6 @@
 import {Constants} from "../constants";
 import {getMarkdown} from "../markdown/getMarkdown";
-import {isSafari} from "../util/compatibility";
+import {accessLocalStorage, isSafari} from "../util/compatibility";
 import {listToggle, renderToc} from "../util/fixBrowserBehavior";
 import {hasClosestBlock, hasClosestByAttribute, hasClosestByClassName, hasClosestByMatchTag} from "../util/hasClosest";
 import {getEditorRange, getSelectPosition, setRangeByWbr} from "../util/selection";
@@ -57,7 +57,7 @@ export const processAfterRender = (vditor: IVditor, options = {
             vditor.counter.render(vditor, text);
         }
 
-        if (vditor.options.cache.enable) {
+        if (vditor.options.cache.enable && accessLocalStorage()) {
             localStorage.setItem(vditor.options.cache.id, text);
             if (vditor.options.cache.after) {
                 vditor.options.cache.after(text);
@@ -151,9 +151,9 @@ export const processToolbar = (vditor: IVditor, actionBtn: Element, prefix: stri
 
         if (commandName === "line") {
             if (typeElement.classList.contains("vditor-reset")) {
-                typeElement.innerHTML = '<hr data-block="0"><p data-block="0">\n<wbr></p>';
+                typeElement.innerHTML = '<hr data-block="0"><p data-block="0"><wbr>\n</p>';
             } else {
-                typeElement.insertAdjacentHTML("afterend", '<hr data-block="0"><p data-block="0">\n<wbr></p>');
+                typeElement.insertAdjacentHTML("afterend", '<hr data-block="0"><p data-block="0"><wbr>\n</p>');
             }
         } else if (commandName === "quote") {
             const blockElement = hasClosestBlock(range.startContainer);
@@ -178,7 +178,7 @@ export const processToolbar = (vditor: IVditor, actionBtn: Element, prefix: stri
                 html = `${prefix}${range.toString()}<wbr>${prefix}`;
             }
             if (commandName === "table" || commandName === "code") {
-                html = "\n" + html + "\n";
+                html = "\n" + html;
             }
             document.execCommand("insertHTML", false, html);
         } else if (commandName === "check" || commandName === "list" || commandName === "ordered-list") {

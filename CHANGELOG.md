@@ -64,10 +64,20 @@
 * [open issues](https://github.com/Vanessa219/vditor/issues)
 * [346](https://github.com/Vanessa219/vditor/issues/346) 内容主题推荐（长期有效） `改进功能`
 
-### v3.2.8 / 2020-05-xx
+### v3.2.10 / 2020-05-xx
 
-### v3.2.7 / 2020-05-17
+* [433](https://github.com/Vanessa219/vditor/issues/433) language position(code block, wysiwyg mode) `修复缺陷`
+* [431](https://github.com/Vanessa219/vditor/issues/431) 链接、图片相对路径支持 `引入特性`
+* [430](https://github.com/Vanessa219/vditor/issues/430) cursor location when press ctrl+b after checkbox `修复缺陷`
+* [429](https://github.com/Vanessa219/vditor/issues/429) localStorage被禁用时，报错 `修复缺陷`
+* [427](https://github.com/Vanessa219/vditor/issues/427) headings 大小调整 `改进功能`
 
+### v3.2.9 / 2020-05-22
+
+* [422](https://github.com/Vanessa219/vditor/issues/422) inserted one line before table block(windows/Firefox) `修复缺陷`
+* [425](https://github.com/Vanessa219/vditor/issues/425) 支持 flac 音频格式解析 `改进功能`
+* [409](https://github.com/Vanessa219/vditor/issues/409) codeblock(mac safari) `修复缺陷`
+* [407](https://github.com/Vanessa219/vditor/issues/407) cursor moving at tables(safari & firefox) `修复缺陷`
 * [421](https://github.com/Vanessa219/vditor/issues/421) 添加 bilibili 视频网站解析 `改进功能`
 * [420](https://github.com/Vanessa219/vditor/issues/420) 缓存时可以提供一个回调吗，我想同步到服务器上 `改进功能`
 * [419](https://github.com/Vanessa219/vditor/issues/419) outline after update at smartphone `改进功能`
@@ -113,9 +123,9 @@
 * 文档修改
   * 为 `options.upload` 添加 `extraData`
   * 添加静态方法 `mindmapRender`
-  * 为 `IMarkdownConfig` 添加 `sanitize`, `listMarker` 配置
+  * 为 `IMarkdownConfig` 添加 `sanitize`, `listMarker`, `linkBase` 配置
   * IPreviewOptions.anchor 从 boolean 修改为 number
-  * static-preview.html => preview.html，static.html => vditor.b3log.org/demo/render.html
+  * static-preview.html => preview.html，static.html => vditor.b3log.org/demo/render.html，添加 vditor.b3log.org
   * 添加 options.cache.after(markdown:string)
   
 
