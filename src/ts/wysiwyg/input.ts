@@ -117,6 +117,10 @@ export const input = (vditor: IVditor, range: Range, event?: InputEvent) => {
         log("SpinVditorDOM", html, "argument", vditor.options.debugger);
 
         html = vditor.lute.SpinVditorDOM(html);
+        // 2020-05-26 所见即所得模式下 支持 preview.transform ，便于统一处理规则（尤其是图片路径）
+        if (vditor.options.preview.transform) {
+            html = vditor.options.preview.transform(html);
+        }
 
         log("SpinVditorDOM", html, "result", vditor.options.debugger);
 
