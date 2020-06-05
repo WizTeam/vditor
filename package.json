@@ -1,12 +1,11 @@
 {
   "name": "wiz-vditor",
-  "version": "3.2.10",
+  "version": "3.2.10.1",
   "description": "♏ An In-browser Markdown editor, support WYSIWYG, Instant Rendering (Typora-like) and Split View modes.",
   "author": "Vanessa <v@b3log.org> (http://vanessa.b3log.org)",
   "homepage": "https://hacpai.com/tag/vditor",
   "jsdelivr": "dist/index.min.js",
   "main": "dist/index.min.js",
-  "wizVersion": "wiz_v0.0.8",
   "funding": "https://hacpai.com/sponsor",
   "files": [
     "dist/*",
