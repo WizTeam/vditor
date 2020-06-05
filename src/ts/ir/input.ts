@@ -160,6 +160,10 @@ export const input = (vditor: IVditor, range: Range, ignoreSpace = false) => {
 
     log("SpinVditorIRDOM", html, "argument", vditor.options.debugger);
     html = vditor.lute.SpinVditorIRDOM(html);
+    // wizPatch 2020-06-04 即时渲染模式下 支持 preview.transform ，便于统一处理规则（尤其是图片路径）
+    if (vditor.options.preview.transform) {
+        html = vditor.options.preview.transform(html);
+    }
     log("SpinVditorIRDOM", html, "result", vditor.options.debugger);
 
     if (isIRElement) {

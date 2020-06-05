@@ -49,6 +49,7 @@ if (window.innerWidth < 768) {
 }
 
 window.vditor = new Vditor('vditor', {
+  mode: 'ir',
   toolbar,
   height: window.innerHeight + 100,
   outline: true,
@@ -59,6 +60,10 @@ window.vditor = new Vditor('vditor', {
     markdown: {
       toc: true,
     },
+    transform: function(html) {
+      console.log(html);
+      return html;
+    }
   },
   toolbarConfig: {
     pin: true,

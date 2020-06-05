@@ -325,7 +325,14 @@ class Vditor extends VditorMethod {
         } else if (this.vditor.currentMode === "wysiwyg") {
             renderDomByMd(this.vditor, markdown, false);
         } else {
-            this.vditor.ir.element.innerHTML = this.vditor.lute.Md2VditorIRDOM(markdown);
+            // this.vditor.ir.element.innerHTML = this.vditor.lute.Md2VditorIRDOM(markdown);
+            // wizPatch 2020-06-04 即时渲染模式下 支持 preview.transform ，便于统一处理规则（尤其是图片路径）
+            let html = this.vditor.lute.Md2VditorIRDOM(markdown);
+            if (this.vditor.options.preview.transform) {
+                html = this.vditor.options.preview.transform(html);
+            }
+            this.vditor.ir.element.innerHTML = html;
+
             processAfterRender(this.vditor, {
                 enableAddUndoStack: true,
                 enableHint: false,
