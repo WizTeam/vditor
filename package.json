@@ -6,7 +6,7 @@
   "homepage": "https://hacpai.com/tag/vditor",
   "jsdelivr": "dist/index.min.js",
   "main": "dist/index.min.js",
-  "wizVersion": "wiz_v0.0.7",
+  "wizVersion": "wiz_v0.0.8",
   "funding": "https://hacpai.com/sponsor",
   "files": [
     "dist/*",
@@ -64,7 +64,8 @@
     "test:watch": "jest --watch",
     "test": "jest --coverage",
     "start": "webpack-dev-server --config webpack.start.js",
-    "build": "webpack"
+    "build": "webpack",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "editor",
