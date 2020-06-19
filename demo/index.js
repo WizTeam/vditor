@@ -49,7 +49,7 @@ if (window.innerWidth < 768) {
 }
 
 window.vditor = new Vditor('vditor', {
-  cdn: 'https://cdn.jsdelivr.net/npm/vditor@3.2.12',
+  cdn: 'https://cdn.jsdelivr.net/npm/vditor@3.3.1',
   mode: 'ir',
   toolbar,
   height: window.innerHeight + 100,
