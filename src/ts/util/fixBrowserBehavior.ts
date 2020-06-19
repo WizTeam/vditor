@@ -1,11 +1,13 @@
 import {Constants} from "../constants";
 import {highlightToolbar as highlightToolbarIR} from "../ir/highlightToolbar";
+import {input as IRInput} from "../ir/input";
 import {processAfterRender} from "../ir/process";
 import {uploadFiles} from "../upload";
 import {setHeaders} from "../upload/setHeaders";
 import {processCodeRender, processPasteCode} from "../util/processCode";
 import {afterRenderEvent} from "../wysiwyg/afterRenderEvent";
 import {highlightToolbar} from "../wysiwyg/highlightToolbar";
+import {input} from "../wysiwyg/input";
 import {isCtrl, isFirefox} from "./compatibility";
 import {scrollCenter} from "./editorCommonEvent";
 import {
@@ -501,6 +503,7 @@ export const fixTab = (vditor: IVditor, range: Range, event: KeyboardEvent) => {
                 range.collapse(false);
             }
         }
+        setSelectionFocus(range);
         execAfterRender(vditor);
         event.preventDefault();
         return true;
@@ -573,6 +576,89 @@ export const fixMarkdown = (event: KeyboardEvent, vditor: IVditor, pElement: HTM
     }
     return false;
 };
+
+export const insertRow = (vditor: IVditor, range: Range, cellElement: HTMLElement) => {
+    let rowHTML = "";
+    for (let m = 0; m < cellElement.parentElement.childElementCount; m++) {
+        rowHTML += `<td>${m === 0 ? " <wbr>" : " "}</td>`;
+    }
+    if (cellElement.tagName === "TH") {
+        cellElement.parentElement.parentElement.insertAdjacentHTML("afterend",
+            `<tbody><tr>${rowHTML}</tr></tbody>`);
+    } else {
+        cellElement.parentElement.insertAdjacentHTML("afterend", `<tr>${rowHTML}</tr>`);
+    }
+
+    setRangeByWbr(vditor[vditor.currentMode].element, range);
+    execAfterRender(vditor);
+    scrollCenter(vditor);
+};
+
+export const insertColumn = (vditor: IVditor, tableElement: HTMLTableElement, cellElement: HTMLElement) => {
+    let index = 0;
+    let previousElement = cellElement.previousElementSibling;
+    while (previousElement) {
+        index++;
+        previousElement = previousElement.previousElementSibling;
+    }
+    for (let i = 0; i < tableElement.rows.length; i++) {
+        if (i === 0) {
+            tableElement.rows[i].cells[index].insertAdjacentHTML("afterend", "<th> </th>");
+        } else {
+            tableElement.rows[i].cells[index].insertAdjacentHTML("afterend", "<td> </td>");
+        }
+    }
+
+    execAfterRender(vditor);
+};
+
+export const deleteRow = (vditor: IVditor, range: Range, cellElement: HTMLElement) => {
+    if (cellElement.tagName === "TD") {
+        const tbodyElement = cellElement.parentElement.parentElement;
+        if (cellElement.parentElement.previousElementSibling) {
+            range.selectNodeContents(cellElement.parentElement.previousElementSibling.lastElementChild);
+        } else {
+            range.selectNodeContents(tbodyElement.previousElementSibling.lastElementChild.lastElementChild);
+        }
+
+        if (tbodyElement.childElementCount === 1) {
+            tbodyElement.remove();
+        } else {
+            cellElement.parentElement.remove();
+        }
+
+        range.collapse(false);
+        setSelectionFocus(range);
+        execAfterRender(vditor);
+    }
+};
+
+export const deleteColumn =
+    (vditor: IVditor, range: Range, tableElement: HTMLTableElement, cellElement: HTMLElement) => {
+        let index = 0;
+        let previousElement = cellElement.previousElementSibling;
+        while (previousElement) {
+            index++;
+            previousElement = previousElement.previousElementSibling;
+        }
+        if (cellElement.previousElementSibling || cellElement.nextElementSibling) {
+            range.selectNodeContents(cellElement.previousElementSibling || cellElement.nextElementSibling);
+            range.collapse(true);
+        }
+        for (let i = 0; i < tableElement.rows.length; i++) {
+            const cells = tableElement.rows[i].cells;
+            if (cells.length === 1) {
+                tableElement.remove();
+                if (vditor.currentMode === "wysiwyg") {
+                    highlightToolbar(vditor);
+                }
+                break;
+            }
+            cells[index].remove();
+        }
+        setSelectionFocus(range);
+        execAfterRender(vditor);
+    };
 
 export const fixTable = (vditor: IVditor, event: KeyboardEvent, range: Range) => {
     const startContainer = range.startContainer;
@@ -687,49 +773,6 @@ export const fixTable = (vditor: IVditor, event: KeyboardEvent, range: Range) =>
             return true;
         }
 
-        // 删除当前行
-        if (matchHotKey("⌘--", event)) {
-            if (cellElement.tagName === "TD") {
-                const tbodyElement = cellElement.parentElement.parentElement;
-                if (cellElement.parentElement.previousElementSibling) {
-                    range.selectNodeContents(cellElement.parentElement.previousElementSibling.lastElementChild);
-                } else {
-                    range.selectNodeContents(tbodyElement.previousElementSibling.lastElementChild.lastElementChild);
-                }
-
-                if (tbodyElement.childElementCount === 1) {
-                    tbodyElement.remove();
-                } else {
-                    cellElement.parentElement.remove();
-                }
-
-                range.collapse(false);
-                execAfterRender(vditor);
-            }
-            event.preventDefault();
-            return true;
-        }
-
-        // 下方新添加一行 https://github.com/Vanessa219/vditor/issues/46
-        if (matchHotKey("⌘-=", event)) {
-            let rowHTML = "";
-            for (let m = 0; m < cellElement.parentElement.childElementCount; m++) {
-                rowHTML += `<td>${m === 0 ? " <wbr>" : " "}</td>`;
-            }
-            if (cellElement.tagName === "TH") {
-                cellElement.parentElement.parentElement.insertAdjacentHTML("afterend",
-                    `<tbody><tr>${rowHTML}</tr></tbody>`);
-            } else {
-                cellElement.parentElement.insertAdjacentHTML("afterend", `<tr>${rowHTML}</tr>`);
-            }
-
-            setRangeByWbr(vditor[vditor.currentMode].element, range);
-            execAfterRender(vditor);
-            scrollCenter(vditor);
-            event.preventDefault();
-            return true;
-        }
-
         // focus row input, only wysiwyg
         if (vditor.currentMode === "wysiwyg" &&
             !isCtrl(event) && event.key === "Enter" && !event.shiftKey && event.altKey) {
@@ -758,48 +801,30 @@ export const fixTable = (vditor: IVditor, event: KeyboardEvent, range: Range) =>
             return true;
         }
 
+        // 下方新添加一行 https://github.com/Vanessa219/vditor/issues/46
+        if (matchHotKey("⌘-=", event)) {
+            insertRow(vditor, range, cellElement);
+            event.preventDefault();
+            return true;
+        }
+
         // 后方新添加一列
         if (matchHotKey("⌘-⇧-=", event)) {
-            let index = 0;
-            let previousElement = cellElement.previousElementSibling;
-            while (previousElement) {
-                index++;
-                previousElement = previousElement.previousElementSibling;
-            }
-            for (let i = 0; i < tableElement.rows.length; i++) {
-                if (i === 0) {
-                    tableElement.rows[i].cells[index].insertAdjacentHTML("afterend", "<th> </th>");
-                } else {
-                    tableElement.rows[i].cells[index].insertAdjacentHTML("afterend", "<td> </td>");
-                }
-            }
+            insertColumn(vditor, tableElement, cellElement);
+            event.preventDefault();
+            return true;
+        }
 
-            execAfterRender(vditor);
+        // 删除当前行
+        if (matchHotKey("⌘--", event)) {
+            deleteRow(vditor, range, cellElement);
             event.preventDefault();
             return true;
         }
 
         // 删除当前列
         if (matchHotKey("⌘-⇧--", event)) {
-            let index = 0;
-            let previousElement = cellElement.previousElementSibling;
-            while (previousElement) {
-                index++;
-                previousElement = previousElement.previousElementSibling;
-            }
-            if (cellElement.previousElementSibling || cellElement.nextElementSibling) {
-                range.selectNodeContents(cellElement.previousElementSibling || cellElement.nextElementSibling);
-                range.collapse(true);
-            }
-            for (let i = 0; i < tableElement.rows.length; i++) {
-                const cells = tableElement.rows[i].cells;
-                if (cells.length === 1) {
-                    tableElement.remove();
-                    break;
-                }
-                cells[index].remove();
-            }
-            execAfterRender(vditor);
+            deleteColumn(vditor, range, tableElement, cellElement);
             event.preventDefault();
             return true;
         }
@@ -898,8 +923,17 @@ export const fixCodeBlock = (vditor: IVditor, event: KeyboardEvent, codeRenderEl
         range.insertNode(document.createTextNode("\n"));
         range.collapse(false);
         setSelectionFocus(range);
-        execAfterRender(vditor);
-        scrollCenter(vditor);
+        if (codeRenderElement.firstElementChild.classList.contains("language-mindmap")) {
+            // 脑图换行需要渲染
+            if (vditor.currentMode === "wysiwyg") {
+                input(vditor, range);
+            } else {
+                IRInput(vditor, range);
+            }
+        } else {
+            execAfterRender(vditor);
+            scrollCenter(vditor);
+        }
         event.preventDefault();
         return true;
     }

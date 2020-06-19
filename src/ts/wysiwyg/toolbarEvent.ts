@@ -73,9 +73,10 @@ const cancelBES = (range: Range, vditor: IVditor, commandName: string) => {
     setRangeByWbr(vditor.wysiwyg.element, range);
 };
 
-export const toolbarEvent = (vditor: IVditor, actionBtn: Element) => {
-    if (vditor.wysiwyg.composingLock) {
-        // Mac Chrome 中韩文结束会出发此事件，导致重复末尾字符 https://github.com/Vanessa219/vditor/issues/188
+export const toolbarEvent = (vditor: IVditor, actionBtn: Element, event: Event) => {
+    if (vditor.wysiwyg.composingLock // Mac Chrome 中韩文结束会出发此事件，导致重复末尾字符 https://github.com/Vanessa219/vditor/issues/188
+        && event instanceof CustomEvent // 点击按钮应忽略输入法 https://github.com/Vanessa219/vditor/issues/473
+    ) {
         return;
     }
 
@@ -228,7 +229,7 @@ export const toolbarEvent = (vditor: IVditor, actionBtn: Element) => {
                 setSelectionFocus(range);
             }
         } else if (commandName === "table") {
-            let tableHTML = `<table data-block="0"><thead><tr><th>col1<wbr></th><th>col2</th><th>col3</th></tr></thead><tbody><tr><td> </td><td> </td><td> </td></tr><tr><td> </td><td> </td><td> </td></tr></tbody></table>`
+            let tableHTML = `<table data-block="0"><thead><tr><th>col1<wbr></th><th>col2</th><th>col3</th></tr></thead><tbody><tr><td> </td><td> </td><td> </td></tr><tr><td> </td><td> </td><td> </td></tr></tbody></table>`;
             if (range.toString().trim() === "") {
                 if (blockElement && blockElement.innerHTML.trim().replace(Constants.ZWSP, "") === "") {
                     blockElement.outerHTML = tableHTML;

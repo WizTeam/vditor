@@ -1,6 +1,8 @@
 ## Vditor change log
 
 ### 升级
+* v3.2
+  * IPreviewOptions.anchor 从 `boolean` 类型修改为 `number` 类型
 * v3.1
   * `options.counter` 修改为 `counter?: { enable: boolean; max?: number; type: "markdown" | "text"; }`
   * `options.hideToolbar` 修改为 `toolbarConfig: { hide?: boolean, pin?: boolean }`
@@ -64,14 +66,36 @@
 * [open issues](https://github.com/Vanessa219/vditor/issues)
 * [346](https://github.com/Vanessa219/vditor/issues/346) 内容主题推荐（长期有效） `改进功能`
 
-### v3.2.11 / 2020-05-xx
+### v3.3.2 / 2020-06-xx
 
+### v3.3.1 / 2020-06-18
+
+* [478](https://github.com/Vanessa219/vditor/issues/478) add tip to footnote `改进功能`
+* [492](https://github.com/Vanessa219/vditor/issues/492) 列表内含有代码块，修改列表中的文字时，代码块会闪 `修复缺陷`
+* [496](https://github.com/Vanessa219/vditor/issues/496) 行级 HTML 空格问题 `修复缺陷`
+* [495](https://github.com/Vanessa219/vditor/issues/495) 行级 HTML 退格问题 `修复缺陷`
+* [494](https://github.com/Vanessa219/vditor/issues/494) 三种模式支持 list-style 样式 `改进功能`
+* [489](https://github.com/Vanessa219/vditor/issues/489) 为 vditor.b3log.org/demo 添加源码 `改进功能`
+* [493](https://github.com/Vanessa219/vditor/issues/493) 修复 XSS 过滤 `修复缺陷`
+* [486](https://github.com/Vanessa219/vditor/pull/486) getCursorPosition 针对空行会得到错误数据 `修复缺陷`
+* [485](https://github.com/Vanessa219/vditor/issues/485) IR 模式下，<details>的编辑问题 `修复缺陷`
+* [484](https://github.com/Vanessa219/vditor/issues/484) 添加 TED 视频支持 `改进功能`
+* [480](https://github.com/Vanessa219/vditor/issues/480) Mindmap 和 Echarts 内容为空时会报错 `修复缺陷`
+* 文档修改
+  * `options.markdown.listMarker` 修改为 `options.markdown.listStyle`
+
+### v3.2.12 / 2020-06-07
+
+* [475](https://github.com/Vanessa219/vditor/issues/475) 从网页和其它 md 编辑器中复制的 iframe 和 视频标签 无法粘贴到 Vditor `修复缺陷`
+* [455](https://github.com/Vanessa219/vditor/issues/455) HTML 实体在切换编辑模式时的转义问题 `修复缺陷`
+* [466](https://github.com/Vanessa219/vditor/issues/466) Tab is not working inside Quote(safari) `修复缺陷`
+* [467](https://github.com/Vanessa219/vditor/issues/467) 为表格添加行列增删按钮 `引入特性`
+* [472](https://github.com/Vanessa219/vditor/issues/472) Add details preview in ir mode `引入特性`
+* [471](https://github.com/Vanessa219/vditor/issues/471) 移动端子工具栏箭头没对齐 `修复缺陷`
+* [473](https://github.com/Vanessa219/vditor/issues/473) different between press "Ctrl+b" and click "B" icon. `修复缺陷`
 * [463](https://github.com/Vanessa219/vditor/issues/463) 在行内代码中进行粘贴时光标位置不对及报错处理 `修复缺陷`
 * [462](https://github.com/Vanessa219/vditor/issues/462) ctrl+z ir 模式没有渲染代码块 `修复缺陷`
 * [456](https://github.com/Vanessa219/vditor/pull/456) 根据逗号/制表符生成表格 `引入特性`
-
-### v3.2.10 / 2020-05-27
-
 * [453](https://github.com/Vanessa219/vditor/issues/453) bold 位于子菜单中无作用 `修复缺陷`
 * [449](https://github.com/Vanessa219/vditor/issues/449) table(IR mode) `修复缺陷`
 * [443](https://github.com/Vanessa219/vditor/issues/443) 快捷键中文版 `文档相关`
@@ -133,12 +157,13 @@
 * [369](https://github.com/Vanessa219/vditor/issues/369) when paste, code can not highlight `修复缺陷`
 * [370](https://github.com/Vanessa219/vditor/issues/370) Copy Paste multiline at markdown mode `改进功能`
 * 文档修改
-  * 为 `options.upload` 添加 `extraData`
+  * 为 `options.upload` 添加 `extraData` 配置
   * 添加静态方法 `mindmapRender`
   * 为 `IMarkdownConfig` 添加 `sanitize`, `listMarker`, `linkBase` 配置
-  * IPreviewOptions.anchor 从 boolean 修改为 number
-  * static-preview.html => preview.html，static.html => vditor.b3log.org/demo/render.html，添加 vditor.b3log.org
-  * 添加 options.cache.after(markdown:string)
+  * IPreviewOptions.anchor 从 `boolean` 类型修改为 `number` 类型
+  * 示例代码地址修改：static-preview.html => preview.html，static.html => vditor.b3log.org/demo/render.html
+  * 添加 [Vditor](https://vditor.b3log.org) 官方首页
+  * 添加缓存回调 `options.cache.after(markdown:string)`
   
 
 ### v3.1.23 / 2020-05-05
