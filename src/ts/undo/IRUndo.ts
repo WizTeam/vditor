@@ -139,8 +139,12 @@ class IRUndo {
             text = this.dmp.patch_apply(state, this.lastText)[0];
         }
 
+        // wizPatch 2020-06-23 即时渲染模式下 支持 preview.transform ，便于统一处理规则（尤其是图片路径）
+        if (vditor.options.preview.transform) {
+            text = vditor.options.preview.transform(text);
+        }
         this.lastText = text;
-        vditor.ir.element.innerHTML = text;
+        vditor.ir.element.innerHTML = text;        
         vditor.ir.element.querySelectorAll(".vditor-ir__preview[data-render='2']").forEach((item: HTMLElement) => {
             processCodeRender(item, vditor);
         });
