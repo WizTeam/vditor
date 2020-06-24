@@ -1,7 +1,11 @@
 import {processCodeRender} from "../util/processCode";
 import {afterRenderEvent} from "./afterRenderEvent";
 
-export const renderDomByMd = (vditor: IVditor, md: string, enableInput = true) => {
+export const renderDomByMd = (vditor: IVditor, md: string, options = {
+    enableAddUndoStack: true,
+    enableHint: false,
+    enableInput: true,
+}) => {
     const editorElement = vditor.wysiwyg.element;
     // editorElement.innerHTML = vditor.lute.Md2VditorDOM(md);
     // wizPatch 2020-05-26 所见即所得模式下 支持 preview.transform ，便于统一处理规则（尤其是图片路径）
@@ -16,9 +20,5 @@ export const renderDomByMd = (vditor: IVditor, md: string, enableInput = true) =
         item.previousElementSibling.setAttribute("style", "display:none");
     });
 
-    afterRenderEvent(vditor, {
-        enableAddUndoStack: true,
-        enableHint: false,
-        enableInput,
-    });
+    afterRenderEvent(vditor, options);
 };
