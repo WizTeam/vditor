@@ -64,7 +64,9 @@ window.vditor = new Vditor('vditor', {
       toc: true,
     },
     transform: function(html) {
-      html = html.replace(/\n<\//ig, '</');
+      html = html.replace(/name="1"/ig, '').replace(/<p /ig, '<p name="1" ');
+      // html = html.replace(/<p/ig, '<div');
+      // html = html.replace(/<\/p>/ig, '</p>');
       // console.log(html);
       return html;
     }

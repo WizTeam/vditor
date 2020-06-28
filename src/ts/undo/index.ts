@@ -136,6 +136,12 @@ class Undo {
 
         this.lastText = text;
 
+        // wizPatch 2020-06-28 支持 preview.transform ，便于统一处理规则（尤其是图片路径）
+        // 必须要放在 lastText 赋值后面，否则会导致 undo 操作时解析 html 错误
+        if (vditor.options.preview.transform) {
+            text = vditor.options.preview.transform(text);
+        }
+
         formatRender(vditor, text, positoin, {
             enableAddUndoStack: false,
             enableHint: false,
