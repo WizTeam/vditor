@@ -326,13 +326,13 @@ class Vditor extends VditorMethod {
                 end: markdown.length,
                 start: markdown.length,
             }, {
-                enableAddUndoStack: !clearStack,
+                enableAddUndoStack: true,
                 enableHint: false,
                 enableInput: false,
             });
         } else if (this.vditor.currentMode === "wysiwyg") {
             renderDomByMd(this.vditor, markdown, {
-                enableAddUndoStack: !clearStack,
+                enableAddUndoStack: true,
                 enableHint: false,
                 enableInput: false,
             });
@@ -346,7 +346,7 @@ class Vditor extends VditorMethod {
             this.vditor.ir.element.innerHTML = html;
 
             processAfterRender(this.vditor, {
-                enableAddUndoStack: !clearStack,
+                enableAddUndoStack: true,
                 enableHint: false,
                 enableInput: false,
             });
