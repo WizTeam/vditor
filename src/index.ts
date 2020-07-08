@@ -31,6 +31,7 @@ import {IRUndo} from "./ts/undo/IRUndo";
 import {WysiwygUndo} from "./ts/undo/WysiwygUndo";
 import {Upload} from "./ts/upload/index";
 import {addScript} from "./ts/util/addScript";
+import {processCodeRender} from "./ts/util/processCode";
 import {Options} from "./ts/util/Options";
 import {getCursorPosition, getEditorRange, setSelectionByPosition} from "./ts/util/selection";
 import {WYSIWYG} from "./ts/wysiwyg";
@@ -344,6 +345,11 @@ class Vditor extends VditorMethod {
                 html = this.vditor.options.preview.transform(html);
             }
             this.vditor.ir.element.innerHTML = html;
+
+            // wizPatch 2020-07-08 即时渲染模式下 未及时渲染 Code
+            this.vditor.ir.element.querySelectorAll(".vditor-ir__preview[data-render='2']").forEach((item: HTMLElement) => {
+                processCodeRender(item, this.vditor);
+            });
 
             processAfterRender(this.vditor, {
                 enableAddUndoStack: true,
