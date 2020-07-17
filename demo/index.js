@@ -48,9 +48,10 @@ if (window.innerWidth < 768) {
       ],
     }]
 }
+let vditorVersion = '3.3.8';
 
 window.vditor = new Vditor('vditor', {
-  cdn: 'https://cdn.jsdelivr.net/npm/vditor@3.3.3',
+  cdn: `https://cdn.jsdelivr.net/npm/vditor@${vditorVersion}`,
   mode: 'ir',
   toolbar,
   mode: 'sv',
@@ -60,6 +61,9 @@ window.vditor = new Vditor('vditor', {
   typewriterMode: true,
   placeholder: 'Hello, Vditor!',
   preview: {
+    theme: {
+      path: `https://cdn.jsdelivr.net/npm/vditor@${vditorVersion}/dist/css/content-theme`,
+    },
     markdown: {
       toc: true,
     },

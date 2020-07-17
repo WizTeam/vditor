@@ -173,6 +173,11 @@ class Undo {
         }
 
         this[vditor.currentMode].lastText = text;
+        // wizPatch 2020-07-17 支持 preview.transform ，便于统一处理规则（尤其是图片路径）
+        if (vditor.options.preview.transform) {
+            text = vditor.options.preview.transform(text);
+        }
+        
         vditor[vditor.currentMode].element.innerHTML = text;
         if (vditor.currentMode !== "sv") {
             vditor[vditor.currentMode].element.querySelectorAll(`.vditor-${vditor.currentMode}__preview[data-render='2']`)
