@@ -1,6 +1,6 @@
 {
   "name": "wiz-vditor",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "♏ An In-browser Markdown editor, support WYSIWYG, Instant Rendering (Typora-like) and Split View modes.",
   "author": "Vanessa <v@b3log.org> (http://vanessa.b3log.org)",
   "homepage": "https://vditor.b3log.org",

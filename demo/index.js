@@ -51,10 +51,10 @@ if (window.innerWidth < 768) {
 let vditorVersion = '3.3.8';
 
 window.vditor = new Vditor('vditor', {
-  cdn: `https://cdn.jsdelivr.net/npm/vditor@${vditorVersion}`,
-  mode: 'ir',
+  // _lutePath: `http://192.168.0.107:9090/lute.min.js?${new Date().getTime()}`,
+  _lutePath: 'src/js/lute/lute.min.js',
   toolbar,
-  mode: 'sv',
+  mode: 'ir',
   height: window.innerHeight + 100,
   outline: true,
   debugger: true,
@@ -90,11 +90,14 @@ window.vditor = new Vditor('vditor', {
       'j': 'https://unpkg.com/vditor@1.3.1/dist/images/emoji/j.png',
     },
     at: (key) => {
-      return [
-        {
-          value: '@Vanessa',
-          html: '<img src="https://avatars0.githubusercontent.com/u/970828?s=60&v=4"/> Vanessa',
-        }]
+      if ('vanessa'.indexOf(key.toLocaleLowerCase()) > -1) {
+        return [
+          {
+            value: '@Vanessa',
+            html: '<img src="https://avatars0.githubusercontent.com/u/970828?s=60&v=4"/> Vanessa',
+          }]
+      }
+      return []
     },
   },
   tab: '\t',
