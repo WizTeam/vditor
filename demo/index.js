@@ -48,11 +48,12 @@ if (window.innerWidth < 768) {
       ],
     }]
 }
-let vditorVersion = '3.3.8';
+let vditorVersion = '3.3.12';
 
 window.vditor = new Vditor('vditor', {
-  // _lutePath: `http://192.168.0.107:9090/lute.min.js?${new Date().getTime()}`,
-  _lutePath: 'src/js/lute/lute.min.js',
+  _lutePath: `http://192.168.0.107:9090/lute.min.js?${new Date().getTime()}`,
+  // _lutePath: 'src/js/lute/lute.min.js',
+  cdn: `https://cdn.jsdelivr.net/npm/vditor@${vditorVersion}`,
   toolbar,
   mode: 'ir',
   height: window.innerHeight + 100,

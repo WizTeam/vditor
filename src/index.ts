@@ -115,7 +115,6 @@ class Vditor extends VditorMethod {
                     listStyle: this.vditor.options.preview.markdown.listStyle,
                     paragraphBeginningSpace: this.vditor.options.preview.markdown.paragraphBeginningSpace,
                     sanitize: this.vditor.options.preview.markdown.sanitize,
-                    setext: this.vditor.options.preview.markdown.setext,
                     toc: this.vditor.options.preview.markdown.toc,
                 });
 
@@ -127,6 +126,7 @@ class Vditor extends VditorMethod {
                     mergedOptions.after();
                 }
             });
+        addScript(`${mergedOptions.cdn}/dist/js/icons/${mergedOptions.icon}.js`, "vditorIconScript");
     }
 
     /** 设置主题 */
@@ -353,6 +353,7 @@ class Vditor extends VditorMethod {
         this.vditor.element.innerHTML = this.vditor.originalInnerHTML;
         this.vditor.element.classList.remove("vditor");
         this.vditor.element.removeAttribute("style");
+        document.getElementById("vditorIconScript").remove();
         this.clearCache();
     }
 }
