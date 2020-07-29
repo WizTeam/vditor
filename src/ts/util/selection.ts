@@ -241,6 +241,10 @@ export const insertHTML = (html: string, vditor: IVditor) => {
         html = tempBlockElement[0].innerHTML.trim();
     }
 
+    // wizPatch 2020-07-29 即时渲染模式下 支持 preview.transform ，便于统一处理规则（尤其是图片路径）
+    if (vditor.options.preview.transform) {
+        html = vditor.options.preview.transform(html);
+    }
     const pasteElement = document.createElement("template");
     pasteElement.innerHTML = html;
 
