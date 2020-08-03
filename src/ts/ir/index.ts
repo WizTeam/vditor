@@ -210,6 +210,11 @@ class IR {
             }
         });
     }
+
+    // wizPatch 2020-08-03 暴露 expandMarker 方法
+    public expandMarker(range: Range, vditor: IVditor) {
+        expandMarker(range, vditor);
+    }
 }
 
 export {IR};
