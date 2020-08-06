@@ -2,8 +2,6 @@ declare module "*.svg";
 
 declare module "*.png";
 
-declare const Lute: ILute;
-
 interface IObject {
     [key: string]: string;
 }
@@ -103,107 +101,109 @@ interface ILuteOptions extends IMarkdownConfig {
     lazyLoadImage?: string;
 }
 
-interface ILute {
-    WalkStop: number;
-    WalkSkipChildren: number;
-    WalkContinue: number;
-    Version: string;
-    Caret: string;
+declare class Lute {
+  public static WalkStop: number;
+  public static WalkSkipChildren: number;
+  public static WalkContinue: number;
+  public static Version: string;
+  public static Caret: string;
 
-    New(): ILute;
+  private constructor();
 
-    GetHeadingID(node: ILuteNode): string;
+  public static New(): Lute;
 
-    SetJSRenderers(options?: {
-        renderers: {
-            HTML2VditorDOM?: ILuteRender,
-            HTML2VditorIRDOM?: ILuteRender,
-            HTML2Md?: ILuteRender,
-            Md2HTML?: ILuteRender,
-            Md2VditorDOM?: ILuteRender,
-            Md2VditorIRDOM?: ILuteRender,
-            Md2VditorSVDOM?: ILuteRender,
-        },
-    }): void;
+  public static GetHeadingID(node: ILuteNode): string;
 
-    SetChineseParagraphBeginningSpace(enable: boolean): void;
+  SetJSRenderers(options?: {
+    renderers: {
+        HTML2VditorDOM?: ILuteRender,
+        HTML2VditorIRDOM?: ILuteRender,
+        HTML2Md?: ILuteRender,
+        Md2HTML?: ILuteRender,
+        Md2VditorDOM?: ILuteRender,
+        Md2VditorIRDOM?: ILuteRender,
+        Md2VditorSVDOM?: ILuteRender,
+    },
+  }): void;
 
-    SetRenderListStyle(enable: boolean): void;
+  SetChineseParagraphBeginningSpace(enable: boolean): void;
 
-    SetLinkBase(url: string): void;
+  SetRenderListStyle(enable: boolean): void;
 
-    SetSanitize(enable: boolean): void;
+  SetLinkBase(url: string): void;
 
-    SetHeadingAnchor(enable: boolean): void;
+  SetSanitize(enable: boolean): void;
 
-    SetImageLazyLoading(imagePath: string): void;
+  SetHeadingAnchor(enable: boolean): void;
 
-    SetInlineMathAllowDigitAfterOpenMarker(enable: boolean): void;
+  SetImageLazyLoading(imagePath: string): void;
 
-    SetToC(enable: boolean): void;
+  SetInlineMathAllowDigitAfterOpenMarker(enable: boolean): void;
 
-    SetFootnotes(enable: boolean): void;
+  SetToC(enable: boolean): void;
 
-    SetAutoSpace(enable: boolean): void;
+  SetFootnotes(enable: boolean): void;
 
-    SetChinesePunct(enable: boolean): void;
+  SetAutoSpace(enable: boolean): void;
 
-    SetFixTermTypo(enable: boolean): void;
+  SetChinesePunct(enable: boolean): void;
 
-    SetEmojiSite(emojiSite: string): void;
+  SetFixTermTypo(enable: boolean): void;
 
-    SetVditorCodeBlockPreview(enable: boolean): void;
+  SetEmojiSite(emojiSite: string): void;
 
-    PutEmojis(emojis: IObject): void;
+  SetVditorCodeBlockPreview(enable: boolean): void;
 
-    GetEmojis(): IObject;
+  PutEmojis(emojis: IObject): void;
 
-    FormatMd(markdown: string): string;
+  GetEmojis(): IObject;
 
-    // debugger md
-    RenderEChartsJSON(text: string): string;
+  FormatMd(markdown: string): string;
 
-    // md 转换为 html
-    Md2HTML(markdown: string): string;
+  // debugger md
+  RenderEChartsJSON(text: string): string;
 
-    // 粘贴时将 html 转换为 md
-    HTML2Md(html: string): string;
+  // md 转换为 html
+  Md2HTML(markdown: string): string;
 
-    // wysiwyg 转换为 html
-    VditorDOM2HTML(vhtml: string): string;
+  // 粘贴时将 html 转换为 md
+  HTML2Md(html: string): string;
 
-    // wysiwyg 输入渲染
-    SpinVditorDOM(html: string): string;
+  // wysiwyg 转换为 html
+  VditorDOM2HTML(vhtml: string): string;
 
-    // 粘贴时将 html 转换为 wysiwyg
-    HTML2VditorDOM(html: string): string;
+  // wysiwyg 输入渲染
+  SpinVditorDOM(html: string): string;
 
-    // 将 wysiwyg 转换为 md
-    VditorDOM2Md(html: string): string;
+  // 粘贴时将 html 转换为 wysiwyg
+  HTML2VditorDOM(html: string): string;
 
-    // 将 md 转换为 wysiwyg
-    Md2VditorDOM(markdown: string): string;
+  // 将 wysiwyg 转换为 md
+  VditorDOM2Md(html: string): string;
 
-    // ir 输入渲染
-    SpinVditorIRDOM(markdown: string): string;
+  // 将 md 转换为 wysiwyg
+  Md2VditorDOM(markdown: string): string;
 
-    // ir 获取 md
-    VditorIRDOM2Md(html: string): string;
+  // ir 输入渲染
+  SpinVditorIRDOM(markdown: string): string;
 
-    // md 转换为 ir
-    Md2VditorIRDOM(text: string): string;
+  // ir 获取 md
+  VditorIRDOM2Md(html: string): string;
 
-    // 获取 HTML
-    VditorIRDOM2HTML(html: string): string;
+  // md 转换为 ir
+  Md2VditorIRDOM(text: string): string;
 
-    // 粘贴时将 html 转换为 sv
-    HTML2VditorIRDOM(html: string): string;
+  // 获取 HTML
+  VditorIRDOM2HTML(html: string): string;
 
-    // sv 输入渲染
-    SpinVditorSVDOM(text: string): string;
+  // 粘贴时将 html 转换为 sv
+  HTML2VditorIRDOM(html: string): string;
 
-    // 粘贴是 md 转换为 sv
-    Md2VditorSVDOM(text: string): string;
+  // sv 输入渲染
+  SpinVditorSVDOM(text: string): string;
+
+  // 粘贴是 md 转换为 sv
+  Md2VditorSVDOM(text: string): string;
 }
 
 declare const webkitAudioContext: {
@@ -538,7 +538,7 @@ interface IVditor {
     element: HTMLElement;
     options: IOptions;
     originalInnerHTML: string;
-    lute: ILute;
+    lute: Lute;
     currentMode: "sv" | "wysiwyg" | "ir";
     devtools?: {
         element: HTMLDivElement,
