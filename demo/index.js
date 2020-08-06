@@ -48,7 +48,7 @@ if (window.innerWidth < 768) {
       ],
     }]
 }
-let vditorVersion = '3.4.3';
+let vditorVersion = '3.4.4';
 
 window.vditor = new Vditor('vditor', {
   // _lutePath: `http://192.168.0.107:9090/lute.min.js?${new Date().getTime()}`,
